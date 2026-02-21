@@ -1,0 +1,6 @@
+venv/
+data/
+.ipynb_checkpoints/
+.virtual_documents/
+*.zip
+
