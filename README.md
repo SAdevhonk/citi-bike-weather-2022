@@ -67,13 +67,21 @@ The goal is to understand how temperature and precipitation affect bike usage an
 
 ## Project Structure
 
-citi-bike-weather-2022/
--
--- citi_bike_weather_2022.ipynb
--- weather_2022_laguardia.csv
--- citibike_2022_daily_with_weather.csv
--- README.md
--- data/  (raw files excluded from GitHub due to size limits)
+The repository contains the following key files:
+
+- `citi_bike_weather_2022.ipynb`  
+  Main Jupyter notebook containing data extraction, cleaning, aggregation, and merging steps.
+
+- `weather_2022_laguardia.csv`  
+  Cleaned daily NOAA weather data for 2022.
+
+- `citibike_2022_daily_with_weather.csv`  
+  Final merged dataset containing daily ride counts and corresponding weather variables.
+
+- `README.md`  
+  Project documentation and methodology description.
+
+Note: Raw CitiBike trip files are excluded from this repository due to GitHub size limitations.
 
 ---
 
