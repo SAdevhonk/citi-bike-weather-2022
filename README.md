@@ -66,3 +66,25 @@ The goal is to understand how temperature and precipitation affect bike usage an
 ---
 
 ## Project Structure
+citi-bike-weather-2022/
+│
+├── citi_bike_weather_2022.ipynb
+├── weather_2022_laguardia.csv
+├── citibike_2022_daily_with_weather.csv
+├── README.md
+└── data/  (raw files not pushed due to size limits)
+
+---
+
+## Final Output
+
+The final dataset `citibike_2022_daily_with_weather.csv` contains:
+
+- Date
+- Daily ride count
+- Daily precipitation
+- Daily average temperature
+- Daily minimum temperature
+- Daily maximum temperature
+
+This dataset serves as the foundation for the final dashboard visualization.
