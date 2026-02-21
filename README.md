@@ -65,13 +65,15 @@ The goal is to understand how temperature and precipitation affect bike usage an
 
 ---
 
+## Project Structure
+
 citi-bike-weather-2022/
-│
-├── citi_bike_weather_2022.ipynb
-├── weather_2022_laguardia.csv
-├── citibike_2022_daily_with_weather.csv
-├── README.md
-└── data/  (raw files excluded from GitHub due to size limits)
+-
+-- citi_bike_weather_2022.ipynb
+-- weather_2022_laguardia.csv
+-- citibike_2022_daily_with_weather.csv
+-- README.md
+-- data/  (raw files excluded from GitHub due to size limits)
 
 ---
 
