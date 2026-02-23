@@ -6,7 +6,7 @@
 ## 🔗 Live Dashboard
 
 **Streamlit App:**  
-https://citi-bike-weather-2022-f2zr3j3vwcsdu7c5vd84m.streamlit.app/
+https://citi-bike-weather-2022-f2zr3j3vwcsduf7c5vd84m.streamlit.app/
 
 ---
 
