@@ -3,19 +3,29 @@
 
 ---
 
-## Project Overview
+## 🔗 Live Dashboard
 
-This project analyzes CitiBike trip data from New York City in 2022 and investigates how weather conditions influenced daily ridership patterns. The analysis integrates CitiBike trip records with NOAA daily weather data from LaGuardia Airport.
-
-The final result is an interactive Streamlit dashboard that visualizes:
-
-- The most popular start stations
-- The relationship between temperature and ride volume
-- Geographic trip patterns using a Kepler.gl map
+**Streamlit App:**  
+https://citi-bike-weather-2022-f2zr3j3vwcsdu7c5vd84m.streamlit.app/
 
 ---
 
-## Research Questions
+## 📌 Project Overview
+
+This project analyzes CitiBike trip data from New York City in 2022 and investigates how weather conditions influenced daily ridership patterns.
+
+CitiBike trip records were merged with NOAA daily weather data from LaGuardia Airport to examine:
+
+- Seasonal trends  
+- Temperature effects  
+- Precipitation impact  
+- Spatial ride distribution  
+
+The final result is a fully deployed interactive Streamlit dashboard.
+
+---
+
+## ❓ Research Questions
 
 1. How does precipitation affect daily CitiBike ridership?
 2. Is there a correlation between average daily temperature and ride volume?
@@ -24,112 +34,127 @@ The final result is an interactive Streamlit dashboard that visualizes:
 
 ---
 
-## Data Sources
+## 📊 Data Sources
 
-### CitiBike Data
-- Source: NYC CitiBike System Data
-- Year: 2022
-- Data Type: Individual trip records
-- Processing: Monthly ZIP files extracted and combined into one dataset using list comprehension and generator expressions.
+### 🚲 CitiBike Data
+- **Source:** NYC CitiBike System Data  
+- **Year:** 2022  
+- **Data Type:** Individual trip records  
+- **Processing:** Monthly ZIP files extracted and combined into a unified dataset  
 
-### Weather Data
-- Source: NOAA (National Oceanic and Atmospheric Administration)
-- Station: USW00014732 (LaGuardia Airport)
-- Dataset: GHCND Daily Summaries
-- Variables used:
-  - TAVG (Average Temperature)
-  - TMIN (Minimum Temperature)
-  - TMAX (Maximum Temperature)
-  - PRCP (Precipitation)
+### 🌦 Weather Data
+- **Source:** NOAA (National Oceanic and Atmospheric Administration)  
+- **Station:** USW00014732 (LaGuardia Airport)  
+- **Dataset:** GHCND Daily Summaries  
+
+**Variables Used:**
+- `TAVG` – Average Temperature  
+- `TMIN` – Minimum Temperature  
+- `TMAX` – Maximum Temperature  
+- `PRCP` – Precipitation  
 
 ---
 
-## Methodology
+## 🧪 Methodology
 
-1. Extracted and combined CitiBike monthly trip files.
-2. Cleaned and aggregated trip data to daily ride counts.
-3. Retrieved daily weather data using the NOAA API.
-4. Cleaned and reshaped weather data from long to wide format.
-5. Merged daily ride counts with daily weather data.
-6. Exported final merged dataset for dashboard development.
+1. Extracted and combined monthly CitiBike trip files.
+2. Cleaned trip data and aggregated to daily ride counts.
+3. Retrieved weather data via the NOAA API.
+4. Reshaped weather data from long to wide format.
+5. Merged daily ride counts with daily weather metrics.
+6. Exported the final merged dataset.
 7. Built interactive visualizations using Plotly.
-8. Integrated charts and Kepler.gl map into a Streamlit dashboard.
+8. Integrated visualizations and Kepler.gl map into a multi-page Streamlit dashboard.
+9. Deployed the dashboard to Streamlit Cloud.
 
 ---
 
-## Dashboard Features
+## 📈 Dashboard Pages
 
-The Streamlit dashboard includes:
+### 1️⃣ Introduction
+Project background, objectives, and analytical context.
 
-- **Top 10 Start Stations (Plotly Bar Chart)**
-  - Horizontal bar chart
-  - Color-scaled by ride volume
-  - Clearly labeled axes and titles
+### 2️⃣ Popular Stations
+- Horizontal bar chart of top 10 start stations  
+- Color-scaled by ride volume  
+- Highlights concentrated demand in Manhattan  
 
-- **Daily Trips vs Temperature (Dual-Axis Plotly Line Chart)**
-  - Ride count on primary axis
-  - Temperature on secondary axis
-  - Seasonal trends clearly visible
+### 3️⃣ Trips vs Temperature
+- Dual-axis Plotly line chart  
+- Daily ride count vs average temperature  
+- Seasonal ridership patterns clearly visible  
 
-- **Kepler.gl Interactive Map**
-  - Visualizes trip flows between stations
-  - Highlights busiest geographic zones
-  - Fully interactive spatial exploration
+### 4️⃣ Trip Map
+- Interactive Kepler.gl spatial visualization  
+- Displays trip flows between stations  
+- Identifies geographic demand clusters  
 
----
-
-## How to Run the Dashboard
-
-1. Navigate to the project folder.
-2. Activate your virtual environment.
-3. Run: streamlit run app.py
+### 5️⃣ Recommendations
+Operational suggestions based on analytical findings.
 
 ---
 
-4. Open the local URL in your browser (e.g., http://localhost:8501).
+## 🔎 Key Insights
+
+- CitiBike usage increases significantly as temperatures rise above ~15°C.
+- Peak ridership occurs during summer months (June–August).
+- Cold-weather months show substantial ridership decline.
+- Midtown and central Manhattan dominate trip volume.
+- Precipitation slightly suppresses daily ridership, but temperature is the stronger predictor.
+- Spatial patterns reveal strong clustering in central business districts.
 
 ---
 
-## Technologies Used
+## ▶️ How to Run Locally
 
+1. Clone this repository.
+2. Navigate to the project folder.
+3. Create and activate a virtual environment.
+4. Install dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+5. Run the app:
+```
+streamlit run app.py
+```
+
+6. Open the provided local URL (e.g., http://localhost:8501).
+
+---
+## 🛠 Technologies Used
 - Python
 - Pandas
 - Plotly
 - Streamlit
 - Kepler.gl
 - NOAA API
-- JupyterLab
+- Jupyter Notebook
 
 ---
 
-## Project Structure
+## 📂 Project Structure
 
+```
 citi-bike-weather-2022/
 │
 ├── app.py
+├── app_part_2.py
 ├── exercise_2_6_dashboard_plotly.ipynb
 ├── citibike_2022_daily_with_weather.csv
 ├── kepler_map.html
+├── requirements.txt
 ├── README.md
-└── data/ (trip CSV files excluded from repo if >25MB)
-
-Note: Raw CitiBike trip files are excluded from this repository due to GitHub size limitations.
-
----
-
-## Key Insights
-
-- Midtown Manhattan stations dominate ridership.
-- CitiBike usage increases significantly during warmer months.
-- Spatial patterns show heavy clustering in central business districts.
-- Temperature is positively correlated with daily ride volume.
+```
+Raw CitiBike monthly files are excluded due to GitHub file size limits.
 
 ---
 
-## Final Output
+## 📁 Final Dataset
 
-The dataset `citibike_2022_daily_with_weather.csv` serves as the analytical foundation for the dashboard and contains:
-
+`citibike_2022_daily_with_weather.csv` contains:
 - Date
 - Daily ride count
 - Daily precipitation
@@ -137,4 +162,21 @@ The dataset `citibike_2022_daily_with_weather.csv` serves as the analytical foun
 - Daily minimum temperature
 - Daily maximum temperature
 
-This project demonstrates data cleaning, API integration, aggregation, visualization design, and dashboard deployment in Python.
+This dataset forms the analytical backbone of the dashboard.
+
+---
+
+## 🎯 Project Outcome
+
+This project demonstrates:
+- Large dataset aggregation
+- API data integration
+- Data cleaning and transformation
+- Time series analysis
+- Spatial visualization
+- Interactive dashboard development
+- Cloud deployment
+
+It showcases end-to-end data analysis and dashboard engineering using Python.
+
+---
