@@ -127,10 +127,10 @@ PLOTLY_DARK = dict(
     paper_bgcolor="#0f0f0f",
     plot_bgcolor="#1e1e1e",
     font_color="#c0c0c0",
-    xaxis=dict(gridcolor="#2e2e2e", linecolor="#2e2e2e", tickcolor="#888"),
-    yaxis=dict(gridcolor="#2e2e2e", linecolor="#2e2e2e", tickcolor="#888"),
     title_font_color="#f0f0f0",
 )
+
+AXIS_DARK = dict(gridcolor="#2e2e2e", linecolor="#2e2e2e", tickcolor="#888", tickfont_color="#888")
 
 ACCENT  = "#3dd68c"
 ACCENT2 = "#00d4ff"
@@ -219,7 +219,8 @@ elif "Popular Stations" in page:
                           textfont_color="#c0c0c0")
         fig.update_layout(
             **PLOTLY_DARK,
-            yaxis=dict(categoryorder="total ascending", gridcolor="#2e2e2e", linecolor="#2e2e2e"),
+            xaxis=dict(gridcolor="#2e2e2e", linecolor="#2e2e2e", tickcolor="#888"),
+            yaxis=dict(categoryorder="total ascending", gridcolor="#2e2e2e", linecolor="#2e2e2e", tickcolor="#888"),
             height=560,
             showlegend=False,
             coloraxis_showscale=False,
