@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Instacart Warenkorb-Analyse | Ageel Alramadhan</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="consent.css"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    :root{--bg:#0f0f0f;--bg2:#161616;--surface:#1e1e1e;--border:#2e2e2e;--text:#f0f0f0;--muted:#888;--accent:#3dd68c;--accent2:#00d4ff;}
+    html{scroll-behavior:smooth;}
+    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;}
+
+    /* NAV */
+    nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(15,15,15,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 40px;height:60px;display:flex;align-items:center;justify-content:space-between;}
+    .nav-logo{font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--accent);text-decoration:none;letter-spacing:1px;flex-shrink:0;width:160px;}
+    .nav-center{display:flex;gap:28px;list-style:none;align-items:center;position:absolute;left:50%;transform:translateX(-50%);}
+    .nav-center a{color:var(--muted);text-decoration:none;font-size:13px;font-weight:500;transition:color 0.2s;}
+    .nav-center a:hover{color:var(--text);}
+    .nav-right{display:flex;gap:12px;align-items:center;flex-shrink:0;width:160px;justify-content:flex-end;}
+    .nav-lang{font-size:12px;color:var(--muted);text-decoration:none;border:1px solid var(--border);padding:5px 12px;transition:all 0.2s;font-family:'JetBrains Mono',monospace;white-space:nowrap;}
+    .nav-lang:hover{border-color:var(--accent);color:var(--accent);}
+    .nav-back{font-size:12px;color:var(--muted);text-decoration:none;font-family:'JetBrains Mono',monospace;transition:color 0.2s;white-space:nowrap;}
+    .nav-back:hover{color:var(--text);}
+    @media(max-width:900px){nav{padding:0 20px;}.nav-center{display:none;}}
+
+    /* FOOTER */
+    footer{background:var(--bg2);border-top:1px solid var(--border);padding:28px 40px;}
+    .footer-inner{max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap;}
+    .footer-copy{font-size:13px;color:var(--muted);font-family:'JetBrains Mono',monospace;}
+    .footer-links{display:flex;gap:20px;align-items:center;flex-wrap:wrap;}
+    .footer-links a{color:var(--muted);text-decoration:none;font-size:13px;font-family:'JetBrains Mono',monospace;display:flex;align-items:center;transition:color 0.2s;}
+    .footer-links a:hover{color:var(--accent);}
+    @media(max-width:768px){.footer-inner{flex-direction:column;align-items:flex-start;}.footer-links{gap:14px;}}
+
+    /* BACK TO TOP */
+    .back-top{position:fixed;bottom:28px;right:28px;z-index:200;width:44px;height:44px;background:var(--accent);color:#0f0f0f;border:none;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.3s,transform 0.2s;border-radius:50%;}
+    .back-top.visible{opacity:1;pointer-events:auto;}
+    .back-top:hover{transform:translateY(-3px);}
+
+    /* BTNS */
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:13px 28px;font-family:'JetBrains Mono',monospace;font-size:14px;text-decoration:none;transition:all 0.2s;cursor:pointer;border:none;white-space:nowrap;}
+    .btn-accent{background:var(--accent);color:#0f0f0f;font-weight:600;}
+    .btn-accent:hover{background:#4df0a0;transform:translateY(-1px);}
+    .btn-outline{background:transparent;color:var(--text);border:1px solid var(--border);}
+    .btn-outline:hover{border-color:var(--accent);color:var(--accent);}
+
+    @media(max-width:900px){
+      nav{padding:0 20px;}
+      .nav-center{display:none;}
+      .footer-inner{grid-template-columns:1fr;}
+      .footer-links{justify-content:flex-start;}
+    }
+    .page-hero{padding:100px 40px 52px;background:var(--bg2);border-bottom:1px solid var(--border);}
+    .page-hero-inner{max-width:900px;margin:0 auto;}
+    .page-eyebrow{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:16px;}
+    .page-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(32px,5vw,60px);letter-spacing:2px;line-height:1;margin-bottom:14px;}
+    .page-subtitle{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--muted);margin-bottom:28px;}
+    .switcher{display:flex;gap:3px;flex-wrap:wrap;margin-top:16px;position:relative;z-index:1;}
+    .switcher a,.switcher span{padding:7px 14px;font-family:'JetBrains Mono',monospace;font-size:13px;text-decoration:none;border:1px solid var(--border);color:var(--muted);transition:all 0.2s;}
+    .switcher a:hover{border-color:var(--accent);color:var(--accent);}
+    .switcher span.active{background:var(--accent);color:#0f0f0f;border-color:var(--accent);font-weight:600;}
+    .case-body{max-width:900px;margin:0 auto;padding:60px 40px 100px;}
+    .tools-box{background:var(--bg2);border:1px solid var(--border);padding:20px 24px;margin-bottom:40px;}
+    .tools-label{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+    .tools-value{font-family:'JetBrains Mono',monospace;font-size:15px;color:var(--accent);margin-bottom:8px;}
+    .tools-box p{font-size:15px;color:#b0b0b0;}
+    .case-body h2{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:1px;margin:48px 0 14px;color:var(--text);}
+    .case-body h3{font-size:18px;font-weight:600;margin:32px 0 10px;color:var(--text);}
+    .case-body p{font-size:16px;color:#c0c0c0;line-height:1.8;margin-bottom:16px;}
+    .case-body ul{margin:0 0 20px 20px;}
+    .case-body li{font-size:16px;color:#c0c0c0;line-height:1.8;margin-bottom:8px;}
+    .case-body strong{color:var(--text);}
+    .case-figure{margin:20px 0 28px;}
+    .case-figure img{width:100%;display:block;border:1px solid var(--border);}
+    .case-figure figcaption{font-size:14px;color:var(--muted);margin-top:10px;font-style:italic;line-height:1.6;}
+    pre.sql-block{background:var(--surface);border:1px solid var(--border);padding:20px 24px;font-family:'JetBrains Mono',monospace;font-size:13px;color:#c0c0c0;overflow-x:auto;line-height:1.7;margin:16px 0 24px;white-space:pre;}
+    .btn-link{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;font-family:'JetBrains Mono',monospace;font-size:14px;text-decoration:none;background:var(--accent);color:#0f0f0f;font-weight:600;margin:16px 0;transition:all 0.2s;}
+    .btn-link:hover{background:#4df0a0;}
+    @media(max-width:768px){.page-hero{padding:80px 20px 40px;}.case-body{padding:40px 20px 60px;}}</style>
+</head>
+<body>
+<nav>
+  <a href="index-de.html" class="nav-logo">ageel.alramadhan</a>
+  <ul class="nav-center">
+    <li><a href="index-de.html">Start</a></li>
+    <li><a href="about-de.html">Über mich</a></li>
+    <li><a href="projects-de.html">Projekte</a></li>
+    <li><a href="contact-de.html">Kontakt</a></li>
+  </ul>
+  <div class="nav-right">
+    <a href="instacart-case-study.html" class="nav-lang">🇬🇧 English</a>
+  </div>
+</nav>
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="page-eyebrow">Fallstudie</div>
+    <h1 class="page-title">Instacart Warenkorb-Analyse</h1>
+    <div class="page-subtitle">Python · Pandas · NumPy · Matplotlib · Seaborn · Kundensegmentierung</div>
+    <nav class="switcher">
+      <span class="active">Instacart</span>
+      <a href="citi-bike-case-study-de.html">Citi Bike</a>
+      <a href="rockbuster-case-study-de.html">Rockbuster</a>
+      <a href="influenza-case-study-de.html">Influenza</a>
+      <a href="happiness-case-study-de.html">Happiness</a>
+      <a href="textmining-case-study-de.html">Text Mining</a>
+    </nav>
+  </div>
+</div>
+
+<div class="case-body">
+
+  <div class="tools-box">
+    <div class="tools-label">Tools &amp; Bibliotheken</div>
+    <div class="tools-value">Python · Pandas · NumPy · Matplotlib · Seaborn · Jupyter</div>
+    <p><strong>Datensatz:</strong> Instacart Market Basket — Bestellungen, Produkte, Kunden (~32 Mio. Bestellzeilen, ~206.000 Kunden, 49 Abteilungen)</p>
+    <p><strong>Ergebnis:</strong> Kundensegmentierung über 5 Dimensionen: Loyalität, Ausgaben, Alter, Einkommen und Bestellhäufigkeit</p>
+  </div>
+
+  <div style="display:flex;gap:12px;align-items:center;margin-bottom:40px;padding:20px 24px;background:var(--surface);border:1px solid var(--border);">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="color:var(--text);flex-shrink:0;"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+    <div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:4px;">Quellcode</div>
+      <a href="https://github.com/ageelalramadhan/Project-4-Instacart-" target="_blank" rel="noopener" style="color:var(--accent);font-family:'JetBrains Mono',monospace;font-size:14px;text-decoration:none;">github.com/ageelalramadhan/Project-4-Instacart- →</a>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin-bottom:40px;">
+    <div style="background:var(--surface);border:1px solid var(--border);padding:20px;text-align:center;border-top:3px solid var(--accent);">
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:40px;color:var(--accent);line-height:1;">9</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--muted);margin-top:6px;">Notebooks</div>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);padding:20px;text-align:center;border-top:3px solid var(--accent2);">
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:40px;color:var(--accent2);line-height:1;">32M</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--muted);margin-top:6px;">Bestellzeilen</div>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);padding:20px;text-align:center;border-top:3px solid #ffd166;">
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:40px;color:#ffd166;line-height:1;">206K</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--muted);margin-top:6px;">Kunden</div>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);padding:20px;text-align:center;border-top:3px solid #ff4d6d;">
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:40px;color:#ff4d6d;line-height:1;">5</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--muted);margin-top:6px;">Segmente</div>
+    </div>
+  </div>
+
+  <h2>Projektübersicht</h2>
+  <p>Instacart benötigte tiefere Einblicke in das Kaufverhalten der Kunden, um Targeting und Marketing zu verbessern. Diese Analyse nutzte Bestelldaten, zusammengeführt mit Kundendemografien, um vier zentrale Geschäftsfragen zu beantworten.</p>
+
+  <h2>Datenpipeline</h2>
+  <table style="width:100%;border-collapse:collapse;margin-bottom:32px;font-size:14px;">
+    <thead><tr style="background:var(--accent);color:#0f0f0f;"><th style="padding:10px 14px;text-align:left;font-family:'JetBrains Mono',monospace;font-size:12px;">Schritt</th><th style="padding:10px 14px;text-align:left;font-family:'JetBrains Mono',monospace;font-size:12px;">Notebook</th><th style="padding:10px 14px;text-align:left;font-family:'JetBrains Mono',monospace;font-size:12px;">Aktion</th></tr></thead>
+    <tbody><tr style="background:var(--surface);"><td style="padding:9px 14px;color:var(--accent2);font-family:'JetBrains Mono',monospace;font-size:12px;">1. Import</td><td style="padding:9px 14px;color:var(--muted);font-size:14px;">4.2</td><td style="padding:9px 14px;color:var(--muted);font-size:14px;">orders.csv + products.csv importieren, profilen und vorschauen</td></tr><tr style="background:var(--bg2);"><td style="padding:9px 14px;color:var(--accent2);font-family:'JetBrains Mono',monospace;font-size:12px;">2. Wrangling</td><td style="padding:9px 14px;color:var(--muted);font-size:14px;">4.3</td><td style="padding:9px 14px;color:var(--muted);font-size:14px;">Spalten umbenennen, Teilmengen erstellen, bereinigte Daten exportieren</td></tr><tr style="background:var(--surface);"><td style="padding:9px 14px;color:var(--accent2);font-family:'JetBrains Mono',monospace;font-size:12px;">3. Konsistenz</td><td style="padding:9px 14px;color:var(--muted);font-size:14px;">4.4</td><td style="padding:9px 14px;color:var(--muted);font-size:14px;">Gemischte Typen beheben, 260.000 fehlende Werte behandeln</td></tr><tr style="background:var(--bg2);"><td style="padding:9px 14px;color:var(--accent2);font-family:'JetBrains Mono',monospace;font-size:12px;">4. Zusammenführung</td><td style="padding:9px 14px;color:var(--muted);font-size:14px;">4.5</td><td style="padding:9px 14px;color:var(--muted);font-size:14px;">Bestellungen + Produkte in einem Dataframe zusammenführen</td></tr><tr style="background:var(--surface);"><td style="padding:9px 14px;color:var(--accent2);font-family:'JetBrains Mono',monospace;font-size:12px;">5. Neue Variablen</td><td style="padding:9px 14px;color:var(--muted);font-size:14px;">4.6</td><td style="padding:9px 14px;color:var(--muted);font-size:14px;">price_label, busiest_day, busiest_period_of_day erstellen</td></tr><tr style="background:var(--bg2);"><td style="padding:9px 14px;color:var(--accent2);font-family:'JetBrains Mono',monospace;font-size:12px;">6. Gruppierung</td><td style="padding:9px 14px;color:var(--muted);font-size:14px;">4.7</td><td style="padding:9px 14px;color:var(--muted);font-size:14px;">Loyalitäts-, Ausgaben- und Bestellhäufigkeits-Flags</td></tr><tr style="background:var(--surface);"><td style="padding:9px 14px;color:var(--accent2);font-family:'JetBrains Mono',monospace;font-size:12px;">7. Kunden</td><td style="padding:9px 14px;color:var(--muted);font-size:14px;">4.8</td><td style="padding:9px 14px;color:var(--muted);font-size:14px;">Kundendemografien (206K) einmergen</td></tr><tr style="background:var(--bg2);"><td style="padding:9px 14px;color:var(--accent2);font-family:'JetBrains Mono',monospace;font-size:12px;">8. Visualisierung</td><td style="padding:9px 14px;color:var(--muted);font-size:14px;">4.8</td><td style="padding:9px 14px;color:var(--muted);font-size:14px;">8 Diagramme: Bestellungen, Loyalität, Preise, Demografien</td></tr><tr style="background:var(--surface);"><td style="padding:9px 14px;color:var(--accent2);font-family:'JetBrains Mono',monospace;font-size:12px;">9. Profiling</td><td style="padding:9px 14px;color:var(--muted);font-size:14px;">4.9</td><td style="padding:9px 14px;color:var(--muted);font-size:14px;">PII-Entfernung, regionale Segmentierung, Kundenprofile</td></tr></tbody>
+  </table>
+
+  <h2>Datenqualitätsprobleme gefunden &amp; behoben</h2>
+  <table style="width:100%;border-collapse:collapse;margin-bottom:32px;font-size:14px;">
+    <thead><tr style="background:var(--accent);color:#0f0f0f;"><th style="padding:10px 14px;text-align:left;font-family:'JetBrains Mono',monospace;font-size:12px;">Problem</th><th style="padding:10px 14px;text-align:left;font-family:'JetBrains Mono',monospace;font-size:12px;">Spalte</th><th style="padding:10px 14px;text-align:left;font-family:'JetBrains Mono',monospace;font-size:12px;">Lösung</th></tr></thead>
+    <tbody><tr style="background:var(--surface);"><td style="padding:9px 14px;color:var(--accent2);font-family:'JetBrains Mono',monospace;font-size:12px;">Preisausreißer (max = 99.999)</td><td style="padding:9px 14px;color:var(--muted);font-size:14px;">products.prices</td><td style="padding:9px 14px;color:var(--muted);font-size:14px;">Als Dateneingabefehler markiert — als "High" in price_label gekennzeichnet</td></tr><tr style="background:var(--bg2);"><td style="padding:9px 14px;color:var(--accent2);font-family:'JetBrains Mono',monospace;font-size:12px;">260.290 fehlende Werte</td><td style="padding:9px 14px;color:var(--muted);font-size:14px;">days_since_prior_order</td><td style="padding:9px 14px;color:var(--muted);font-size:14px;">Erwartet: Erstkunden haben keine vorherige Bestellung. Mit 0 gefüllt.</td></tr><tr style="background:var(--surface);"><td style="padding:9px 14px;color:var(--accent2);font-family:'JetBrains Mono',monospace;font-size:12px;">Gemischter Datentyp (object)</td><td style="padding:9px 14px;color:var(--muted);font-size:14px;">days_since_prior_order</td><td style="padding:9px 14px;color:var(--muted);font-size:14px;">Mit pd.to_numeric(errors="coerce") konvertiert</td></tr><tr style="background:var(--bg2);"><td style="padding:9px 14px;color:var(--accent2);font-family:'JetBrains Mono',monospace;font-size:12px;">Unintuitive Spaltenbezeichnung</td><td style="padding:9px 14px;color:var(--muted);font-size:14px;">order_dow</td><td style="padding:9px 14px;color:var(--muted);font-size:14px;">In order_day_of_week umbenannt</td></tr><tr style="background:var(--surface);"><td style="padding:9px 14px;color:var(--accent2);font-family:'JetBrains Mono',monospace;font-size:12px;">PII in Kundendaten</td><td style="padding:9px 14px;color:var(--muted);font-size:14px;">first_name, last_name</td><td style="padding:9px 14px;color:var(--muted);font-size:14px;">Vor Profiling und Berichterstattung entfernt</td></tr></tbody>
+  </table>
+
+  <div style="background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--accent2);padding:20px 24px;margin:24px 0;">
+    <p style="color:var(--accent2);font-weight:600;margin-bottom:6px;">Wichtige Erkenntnis — Fehlende Werte</p>
+    <p>260.290 fehlende Werte in days_since_prior_order klingen alarmierend, sind aber erwartet — das sind Kunden, die ihre erste Bestellung aufgeben. Kontext bestimmt, ob fehlend = Problem.</p>
+  </div>
+
+  <h2>Bestellverhalten — Wann bestellen Kunden?</h2>
+  <figure class="case-figure">
+    <img src="instacart-order-hour.png" alt="Abbildung 1. Bestellverteilung nach Stunde. Spitzenaktivität 9–16 Uhr. Die 10:00-Uhr-Stunde ist am aktivsten." />
+    <figcaption>Abbildung 1. Bestellverteilung nach Stunde. Spitzenaktivität 9–16 Uhr. Die 10:00-Uhr-Stunde ist am aktivsten.</figcaption>
+  </figure>
+  <figure class="case-figure">
+    <img src="instacart-price-hour.png" alt="Abbildung 2. Durchschnittlicher Produktpreis nach Tageszeit. Preis bleibt über alle Stunden stabil — Tageszeit beeinflusst das Ausgabeverhalten nicht." />
+    <figcaption>Abbildung 2. Durchschnittlicher Produktpreis nach Tageszeit. Preis bleibt über alle Stunden stabil — Tageszeit beeinflusst das Ausgabeverhalten nicht.</figcaption>
+  </figure>
+
+  <div style="background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--accent);padding:20px 24px;margin:24px 0;">
+    <p style="color:var(--accent);font-weight:600;margin-bottom:6px;">Wichtige Erkenntnis — Spitzenzeiten</p>
+    <p>Bestellungen häufen sich um 10:00 Uhr. Promotionen zwischen 8–10 Uhr könnten Kunden zum Zeitpunkt der höchsten Kaufabsicht erreichen.</p>
+  </div>
+
+  <h2>Kundenloyalitätssegmentierung</h2>
+  <table style="width:100%;border-collapse:collapse;margin-bottom:32px;font-size:14px;">
+    <thead><tr style="background:var(--accent);color:#0f0f0f;"><th style="padding:10px 14px;text-align:left;font-family:'JetBrains Mono',monospace;font-size:12px;">Segment</th><th style="padding:10px 14px;text-align:left;font-family:'JetBrains Mono',monospace;font-size:12px;">Bedingung</th><th style="padding:10px 14px;text-align:left;font-family:'JetBrains Mono',monospace;font-size:12px;">Geschäftliche Bedeutung</th></tr></thead>
+    <tbody><tr style="background:var(--surface);"><td style="padding:9px 14px;color:var(--accent2);font-family:'JetBrains Mono',monospace;font-size:12px;">Treuer Kunde</td><td style="padding:9px 14px;color:var(--muted);font-size:14px;">Mittl. Bestellnummer > 20</td><td style="padding:9px 14px;color:var(--muted);font-size:14px;">Langfristige, hochengagierte Nutzer</td></tr><tr style="background:var(--bg2);"><td style="padding:9px 14px;color:var(--accent2);font-family:'JetBrains Mono',monospace;font-size:12px;">Stammkunde</td><td style="padding:9px 14px;color:var(--muted);font-size:14px;">Mittl. Bestellnummer 11–20</td><td style="padding:9px 14px;color:var(--muted);font-size:14px;">Etabliert, aber noch nicht gewohnheitsmäßig</td></tr><tr style="background:var(--surface);"><td style="padding:9px 14px;color:var(--accent2);font-family:'JetBrains Mono',monospace;font-size:12px;">Neukunde</td><td style="padding:9px 14px;color:var(--muted);font-size:14px;">Mittl. Bestellnummer ≤ 10</td><td style="padding:9px 14px;color:var(--muted);font-size:14px;">Neue oder seltene Nutzer</td></tr></tbody>
+  </table>
+  <figure class="case-figure">
+    <img src="instacart-loyalty.png" alt="Abbildung 3. Kundenverteilung nach Loyalitätskategorie. Stammkunden erzeugen das meiste Volumen, treue Kunden haben den höchsten Pro-Bestell-Wert." />
+    <figcaption>Abbildung 3. Kundenverteilung nach Loyalitätskategorie. Stammkunden erzeugen das meiste Volumen, treue Kunden haben den höchsten Pro-Bestell-Wert.</figcaption>
+  </figure>
+
+  <div style="background:var(--surface);border:1px solid var(--border);border-left:3px solid #ffd166;padding:20px 24px;margin:24px 0;">
+    <p style="color:#ffd166;font-weight:600;margin-bottom:6px;">Wichtige Erkenntnis — Loyalität vs. Ausgaben</p>
+    <p>Treue Kunden sind nicht automatisch Vielausgeber — manche Langzeitnutzer kaufen habitually günstige Produkte. Die Kombination beider Flags schafft umsetzbarere Segmente.</p>
+  </div>
+
+  <h2>Kundendemografien</h2>
+  <table style="width:100%;border-collapse:collapse;margin-bottom:32px;font-size:14px;">
+    <thead><tr style="background:var(--accent);color:#0f0f0f;"><th style="padding:10px 14px;text-align:left;font-family:'JetBrains Mono',monospace;font-size:12px;">Variable</th><th style="padding:10px 14px;text-align:left;font-family:'JetBrains Mono',monospace;font-size:12px;">Bins</th><th style="padding:10px 14px;text-align:left;font-family:'JetBrains Mono',monospace;font-size:12px;">Labels</th></tr></thead>
+    <tbody><tr style="background:var(--surface);"><td style="padding:9px 14px;color:var(--accent2);font-family:'JetBrains Mono',monospace;font-size:12px;">age_group</td><td style="padding:9px 14px;color:var(--muted);font-size:14px;"><30 / 30–49 / 50–64 / 65+</td><td style="padding:9px 14px;color:var(--muted);font-size:14px;">Junge Erwachsene / Erwachsene / Mittleren Alters / Senior</td></tr><tr style="background:var(--bg2);"><td style="padding:9px 14px;color:var(--accent2);font-family:'JetBrains Mono',monospace;font-size:12px;">income_group</td><td style="padding:9px 14px;color:var(--muted);font-size:14px;"><40k€ / 40k–80k€ / >80k€</td><td style="padding:9px 14px;color:var(--muted);font-size:14px;">Niedriges / Mittleres / Hohes Einkommen</td></tr><tr style="background:var(--surface);"><td style="padding:9px 14px;color:var(--accent2);font-family:'JetBrains Mono',monospace;font-size:12px;">family_status</td><td style="padding:9px 14px;color:var(--muted);font-size:14px;">0 / 1–2 / 3+ Abhängige</td><td style="padding:9px 14px;color:var(--muted);font-size:14px;">Keine / Kleine / Große Familie</td></tr><tr style="background:var(--bg2);"><td style="padding:9px 14px;color:var(--accent2);font-family:'JetBrains Mono',monospace;font-size:12px;">order_frequency</td><td style="padding:9px 14px;color:var(--muted);font-size:14px;">5–9 / 10–19 / 20+ Bestellungen</td><td style="padding:9px 14px;color:var(--muted);font-size:14px;">Niedrige / Mittlere / Hohe Frequenz</td></tr></tbody>
+  </table>
+  <figure class="case-figure">
+    <img src="instacart-age-group.png" alt="Abbildung 4. Kundenverteilung nach Altersgruppe. Erwachsene (30–49) sind das größte Segment." />
+    <figcaption>Abbildung 4. Kundenverteilung nach Altersgruppe. Erwachsene (30–49) sind das größte Segment.</figcaption>
+  </figure>
+  <figure class="case-figure">
+    <img src="instacart-income-group.png" alt="Abbildung 5. Kundenverteilung nach Einkommensgruppe. Mitteleinkommenskunden dominieren." />
+    <figcaption>Abbildung 5. Kundenverteilung nach Einkommensgruppe. Mitteleinkommenskunden dominieren.</figcaption>
+  </figure>
+  <figure class="case-figure">
+    <img src="instacart-age-dependents.png" alt="Abbildung 6. Durchschnittliche Abhängige nach Alter. Klassische Lebensphasenkurve — Maximum im Alter 30–50." />
+    <figcaption>Abbildung 6. Durchschnittliche Abhängige nach Alter. Klassische Lebensphasenkurve — Maximum im Alter 30–50.</figcaption>
+  </figure>
+  <figure class="case-figure">
+    <img src="instacart-age-income.png" alt="Abbildung 7. Alter vs. Einkommen. Keine starke lineare Korrelation — Einkommen steigt, wird aber nach 30 zunehmend variabel." />
+    <figcaption>Abbildung 7. Alter vs. Einkommen. Keine starke lineare Korrelation — Einkommen steigt, wird aber nach 30 zunehmend variabel.</figcaption>
+  </figure>
+
+  <h2>Kundenprofiling</h2>
+  <p>Kunden mit weniger als 5 Bestellungen wurden zuerst ausgeschlossen (1,44 Mio. Zeilen entfernt). Jeder verbleibende Kunde erhielt ein kombiniertes Profil.</p>
+  <figure class="case-figure">
+    <img src="instacart-order-frequency.png" alt="Abbildung 8. Kundenverteilung nach Bestellhäufigkeit. Hochfrequente Kunden (20+ Bestellungen) sind die größte Gruppe." />
+    <figcaption>Abbildung 8. Kundenverteilung nach Bestellhäufigkeit. Hochfrequente Kunden (20+ Bestellungen) sind die größte Gruppe.</figcaption>
+  </figure>
+  <figure class="case-figure">
+    <img src="instacart-profile-heatmap.png" alt="Abbildung 9. Kundenzahl nach Altersgruppe × Bestellhäufigkeit. Erwachsene mit hoher Frequenz sind das wertvollste Segment." />
+    <figcaption>Abbildung 9. Kundenzahl nach Altersgruppe × Bestellhäufigkeit. Erwachsene mit hoher Frequenz sind das wertvollste Segment.</figcaption>
+  </figure>
+
+  <h2>Wichtigste Erkenntnisse</h2>
+  <div style="background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--accent);padding:20px 24px;margin-bottom:8px;">
+    <p style="color:var(--accent);font-weight:600;margin-bottom:6px;">Erkenntnis 1 — Bestellungen häufen sich zwischen 9 und 16 Uhr.</p>
+    <p>Instacart ist eine Tagesplattform. Promotionen und Logistikstaffing sollten auf das 9–16-Uhr-Fenster konzentriert werden.</p>
+  </div>
+  <div style="background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--accent2);padding:20px 24px;margin-bottom:8px;">
+    <p style="color:var(--accent2);font-weight:600;margin-bottom:6px;">Erkenntnis 2 — Produktpreis ist über alle Stunden stabil.</p>
+    <p>Zeitbasierte Preisanreize ändern das Ausgabeverhalten nicht. Promotionen sollten Segmente, nicht Stunden, ansprechen.</p>
+  </div>
+  <div style="background:var(--surface);border:1px solid var(--border);border-left:3px solid #ffd166;padding:20px 24px;margin-bottom:8px;">
+    <p style="color:#ffd166;font-weight:600;margin-bottom:6px;">Erkenntnis 3 — Stammkunden erzeugen das meiste Bestellvolumen.</p>
+    <p>Eine Loyalitätskonversionsstrategie — von Stamm- zu Treuekunden — bietet das höchste Umsatzpotenzial.</p>
+  </div>
+  <div style="background:var(--surface);border:1px solid var(--border);border-left:3px solid #ff4d6d;padding:20px 24px;margin-bottom:8px;">
+    <p style="color:#ff4d6d;font-weight:600;margin-bottom:6px;">Erkenntnis 4 — Erwachsene (30–49) sind das dominante Segment.</p>
+    <p>Marketingkampagnen sollten auf Haushaltseinkäufe optimiert werden: Grundnahrungsmittel, Frischprodukte und Mahlzeitenplanung.</p>
+  </div>
+  <div style="background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--accent);padding:20px 24px;margin-bottom:8px;">
+    <p style="color:var(--accent);font-weight:600;margin-bottom:6px;">Erkenntnis 5 — Mitteleinkommenskunden sind die Kerndemografie.</p>
+    <p>Kernkatalogpreise sollten für Mitteleinkommenshaushalte zugänglich bleiben, während Premium-Platzierung das Hocheinkommenssegment gezielt anspricht.</p>
+  </div>
+  <div style="background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--accent2);padding:20px 24px;margin-bottom:8px;">
+    <p style="color:var(--accent2);font-weight:600;margin-bottom:6px;">Erkenntnis 6 — Hochfrequente Kunden sind die größte Einzelgruppe.</p>
+    <p>Bindungsstrategien (Abonnements, Treueprämien) haben eine größere Zielgruppe als Neukundenakquise — und daher höheren ROI.</p>
+  </div>
+
+  <h2>Vollständige Fallstudie PDF</h2>
+  <p>Laden Sie die vollständige Fallstudie mit allen Diagrammen, Pipeline-Dokumentation und Segmentierungsanalyse herunter.</p>
+  <a href="instacart-case-study-de.pdf" class="btn-link" download>↓ Vollständige Fallstudie herunterladen (PDF)</a>
+  <a href="https://github.com/ageelalramadhan/Project-4-Instacart-" target="_blank" rel="noopener" class="btn-outline-link">&lt;/&gt; GitHub-Repository</a>
+
+</div>
+<footer>
+  <div class="footer-inner">
+    <p class="footer-copy">© 2026 Ageel Alramadhan · Datenanalyst · Hamburg</p>
+    <div class="footer-links">
+      <a href="contact-de.html">Kontakt</a>
+      <a href="https://www.linkedin.com/in/ageel-alramadhan/" target="_blank" rel="noopener">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:middle;margin-right:4px"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>LinkedIn</a>
+      <a href="https://github.com/ageelalramadhan" target="_blank" rel="noopener">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:middle;margin-right:4px"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>GitHub</a>
+      <a href="impressum.html">Impressum</a>
+      <a href="datenschutz.html">Datenschutzerklärung</a>
+    </div>
+  </div>
+</footer>
+<button class="back-top" id="back-top" aria-label="Back to top">↑</button>
+<div id="cookie-banner" class="cookie-banner" style="display:none;">
+  <div class="cookie-inner"><p>Diese Website verwendet Google Analytics. Sie können zustimmen oder ablehnen.</p>
+  <div class="cookie-actions"><button class="cookie-btn" data-cookie-reject>Ablehnen</button><button class="cookie-btn primary" data-cookie-accept>Akzeptieren</button></div></div>
+</div>
+<script src="consent.js"></script>
+<script>
+  const btn = document.getElementById('back-top');
+  window.addEventListener('scroll', () => btn.classList.toggle('visible', window.scrollY > 300));
+  btn.addEventListener('click', () => window.scrollTo({top:0,behavior:'smooth'}));</script>
+</body>
+</html>

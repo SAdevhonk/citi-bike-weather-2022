@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>NYC Citi Bike Dashboard (2022) | Ageel Alramadhan</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="consent.css"/>
+<style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    :root{--bg:#0f0f0f;--bg2:#161616;--surface:#1e1e1e;--border:#2e2e2e;--text:#f0f0f0;--muted:#888;--accent:#3dd68c;--accent2:#00d4ff;}
+    html{scroll-behavior:smooth;}
+    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;}
+
+    /* NAV */
+    nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(15,15,15,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 40px;height:60px;display:flex;align-items:center;justify-content:space-between;}
+    .nav-logo{font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--accent);text-decoration:none;letter-spacing:1px;flex-shrink:0;width:160px;}
+    .nav-center{display:flex;gap:28px;list-style:none;align-items:center;position:absolute;left:50%;transform:translateX(-50%);}
+    .nav-center a{color:var(--muted);text-decoration:none;font-size:13px;font-weight:500;transition:color 0.2s;}
+    .nav-center a:hover{color:var(--text);}
+    .nav-right{display:flex;gap:12px;align-items:center;flex-shrink:0;width:160px;justify-content:flex-end;}
+    .nav-lang{font-size:12px;color:var(--muted);text-decoration:none;border:1px solid var(--border);padding:5px 12px;transition:all 0.2s;font-family:'JetBrains Mono',monospace;white-space:nowrap;}
+    .nav-lang:hover{border-color:var(--accent);color:var(--accent);}
+    .nav-back{font-size:12px;color:var(--muted);text-decoration:none;font-family:'JetBrains Mono',monospace;transition:color 0.2s;white-space:nowrap;}
+    .nav-back:hover{color:var(--text);}
+    @media(max-width:900px){nav{padding:0 20px;}.nav-center{display:none;}}
+
+    /* FOOTER */
+    footer{background:var(--bg2);border-top:1px solid var(--border);padding:28px 40px;}
+    .footer-inner{max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap;}
+    .footer-copy{font-size:13px;color:var(--muted);font-family:'JetBrains Mono',monospace;}
+    .footer-links{display:flex;gap:20px;align-items:center;flex-wrap:wrap;}
+    .footer-links a{color:var(--muted);text-decoration:none;font-size:13px;font-family:'JetBrains Mono',monospace;display:flex;align-items:center;transition:color 0.2s;}
+    .footer-links a:hover{color:var(--accent);}
+    @media(max-width:768px){.footer-inner{flex-direction:column;align-items:flex-start;}.footer-links{gap:14px;}}
+
+    /* BACK TO TOP */
+    .back-top{position:fixed;bottom:28px;right:28px;z-index:200;width:44px;height:44px;background:var(--accent);color:#0f0f0f;border:none;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.3s,transform 0.2s;border-radius:50%;}
+    .back-top.visible{opacity:1;pointer-events:auto;}
+    .back-top:hover{transform:translateY(-3px);}
+
+    /* BTNS */
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:13px 28px;font-family:'JetBrains Mono',monospace;font-size:14px;text-decoration:none;transition:all 0.2s;cursor:pointer;border:none;white-space:nowrap;}
+    .btn-accent{background:var(--accent);color:#0f0f0f;font-weight:600;}
+    .btn-accent:hover{background:#4df0a0;transform:translateY(-1px);}
+    .btn-outline{background:transparent;color:var(--text);border:1px solid var(--border);}
+    .btn-outline:hover{border-color:var(--accent);color:var(--accent);}
+
+    @media(max-width:900px){
+      nav{padding:0 20px;}
+      .nav-center{display:none;}
+      .footer-inner{grid-template-columns:1fr;}
+      .footer-links{justify-content:flex-start;}
+    }
+    .page-hero{padding:100px 40px 52px;background:var(--bg2);border-bottom:1px solid var(--border);}
+    .page-hero-inner{max-width:900px;margin:0 auto;}
+    .page-eyebrow{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:16px;}
+    .page-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(32px,5vw,60px);letter-spacing:2px;line-height:1;margin-bottom:14px;}
+    .page-subtitle{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--muted);margin-bottom:28px;}
+    .switcher{display:flex;gap:3px;flex-wrap:wrap;margin-top:16px;position:relative;z-index:1;}
+    .switcher a,.switcher span{padding:7px 14px;font-family:'JetBrains Mono',monospace;font-size:13px;text-decoration:none;border:1px solid var(--border);color:var(--muted);transition:all 0.2s;}
+    .switcher a:hover{border-color:var(--accent);color:var(--accent);}
+    .switcher span.active{background:var(--accent);color:#0f0f0f;border-color:var(--accent);font-weight:600;}
+    .case-body{max-width:900px;margin:0 auto;padding:60px 40px 100px;}
+    .tools-box{background:var(--bg2);border:1px solid var(--border);padding:20px 24px;margin-bottom:40px;}
+    .tools-label{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+    .tools-value{font-family:'JetBrains Mono',monospace;font-size:15px;color:var(--accent);margin-bottom:8px;}
+    .tools-box p{font-size:15px;color:#b0b0b0;}
+    .case-body h2{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:1px;margin:48px 0 14px;color:var(--text);}
+    .case-body h3{font-size:18px;font-weight:600;margin:32px 0 10px;color:var(--text);}
+    .case-body p{font-size:16px;color:#c0c0c0;line-height:1.8;margin-bottom:16px;}
+    .case-body ul{margin:0 0 20px 20px;}
+    .case-body li{font-size:16px;color:#c0c0c0;line-height:1.8;margin-bottom:8px;}
+    .case-body strong{color:var(--text);}
+    .case-figure{margin:20px 0 28px;}
+    .case-figure img{width:100%;display:block;border:1px solid var(--border);}
+    .case-figure figcaption{font-size:14px;color:var(--muted);margin-top:10px;font-style:italic;line-height:1.6;}
+    pre.sql-block{background:var(--surface);border:1px solid var(--border);padding:20px 24px;font-family:'JetBrains Mono',monospace;font-size:13px;color:#c0c0c0;overflow-x:auto;line-height:1.7;margin:16px 0 24px;white-space:pre;}
+    .btn-link{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;font-family:'JetBrains Mono',monospace;font-size:14px;text-decoration:none;background:var(--accent);color:#0f0f0f;font-weight:600;margin:16px 0;transition:all 0.2s;}
+    .btn-link:hover{background:#4df0a0;}
+    @media(max-width:768px){.page-hero{padding:80px 20px 40px;}.case-body{padding:40px 20px 60px;}}</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo">ageel.alramadhan</a>
+  <ul class="nav-center">
+    <li><a href="index.html">Start</a></li>
+    <li><a href="about.html">&#220;ber mich</a></li>
+    <li><a href="projects.html">Projekte</a></li>
+    <li><a href="contact.html">Kontakt</a></li>
+  </ul>
+  <div class="nav-right">
+    <a href="citi-bike-case-study.html" class="nav-lang">&#127468;&#127463; English</a>
+  </div>
+</nav>
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="page-eyebrow">Fallstudie</div>
+    <h1 class="page-title">NYC Citi Bike Dashboard (2022)</h1>
+    <div class="page-subtitle">Python &middot; Pandas &middot; Plotly &middot; Streamlit &middot; Kepler.gl &middot; Zeitreihen &middot; NOAA API</div>
+    <nav class="switcher">
+      <a href="instacart-case-study-de.html">Instacart</a>
+      <span class="active">Citi Bike</span>
+      <a href="rockbuster-case-study-de.html">Rockbuster</a>
+      <a href="influenza-case-study-de.html">Influenza</a>
+      <a href="happiness-case-study-de.html">Happiness</a>
+      <a href="textmining-case-study-de.html">Text Mining</a>
+    </nav>
+  </div>
+</div>
+<div class="case-body">
+
+  <div class="tools-box">
+    <div class="tools-label">Tools &amp; Bibliotheken</div>
+    <div class="tools-value">Python &middot; Pandas &middot; NumPy &middot; Plotly &middot; Seaborn &middot; Matplotlib &middot; Streamlit &middot; Kepler.gl</div>
+    <p><strong>Datenquelle:</strong> NYC Citi Bike Systemdaten (2022) &mdash; 12 monatliche ZIP-Dateien, ~1,7 Millionen einzelne Fahrtdatens&#228;tze</p>
+    <p><strong>Wetterdaten:</strong> NOAA GHCND Daily Summaries, Station USW00014732 (Flughafen LaGuardia) &mdash; &#252;ber API abgerufen (TAVG, TMIN, TMAX, PRCP)</p>
+    <p><strong>Ergebnis:</strong> Vollst&#228;ndig deploytes mehrseitiges Streamlit-Dashboard zu Saisontrends, Temperaturkorrelation, Stationsnachfrage und r&#228;umlichen Fahrtclustern</p>
+  </div>
+
+  <div class="source-box">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+    <div>
+      <div class="source-label">Quellcode</div>
+      <a href="https://github.com/ageelalramadhan/citi-bike-weather-2022" target="_blank" rel="noopener">github.com/ageelalramadhan/citi-bike-weather-2022 &rarr;</a>
+    </div>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat-cell" style="border-top:3px solid var(--accent)"><div class="stat-num stat-green">5</div><div class="stat-label">Notebooks</div></div>
+    <div class="stat-cell" style="border-top:3px solid var(--accent2)"><div class="stat-num stat-blue">1,7 Mio.</div><div class="stat-label">Fahrtdatens&#228;tze</div></div>
+    <div class="stat-cell" style="border-top:3px solid #f0c040"><div class="stat-num stat-yellow">365</div><div class="stat-label">Tage zusammengef&#252;hrt</div></div>
+    <div class="stat-cell" style="border-top:3px solid #ff6b9d"><div class="stat-num stat-pink">6</div><div class="stat-label">Dashboard-Seiten</div></div>
+  </div>
+
+  <h3>Projekt&#252;bersicht</h3>
+  <p>Citi Bike erzeugt jedes Jahr Millionen von Fahrtdatens&#228;tzen &mdash; doch rohe Fahrtprotokolle sagen Betriebsteams nicht, wann sie das Angebot skalieren, welche Stationen priorisiert werden sollen oder wie sie saisonale Schwankungen planen k&#246;nnen. Dieses Projekt &#252;berbr&#252;ckt diese L&#252;cke: 1,7 Millionen Einzelfahrten werden mit NOAA-Wetterdaten vom Flughafen LaGuardia zusammengef&#252;hrt und in ein interaktives, deployetes Dashboard f&#252;r operative Entscheidungen umgewandelt.</p>
+  <p><strong>Gesch&#228;ftsfrage:</strong> Wie sollte Citi Bike Fahrradangebot und Umverteilungsoperationen &#252;ber das Jahr skalieren &mdash; und welche Stationen, Jahreszeiten und Umweltfaktoren treiben diese Entscheidung?</p>
+
+  <h3>Datenpipeline</h3>
+  <table class="pipeline-table">
+    <thead><tr><th>Schritt</th><th>Notebook</th><th>Aktion</th></tr></thead>
+    <tbody>
+      <tr><td><span class="step-tag">1. Abrufen</span></td><td>citi_bike_weather_2022</td><td>12 monatliche Citi-Bike-ZIP-Dateien + NOAA-API-Wetterdaten per Paginierung heruntergeladen</td></tr>
+      <tr><td><span class="step-tag">2. Extrahieren</span></td><td>citi_bike_weather_2022</td><td>ZIP-Dateien mit Pythons zipfile-Modul entpackt; alle 12 CSVs mit Generator in pd.concat() zusammengef&#252;hrt</td></tr>
+      <tr><td><span class="step-tag">3. Bereinigen</span></td><td>citi_bike_weather_2022</td><td>Zeitstempel geparst, auf 2022 gefiltert, ung&#252;ltige Datumsangaben entfernt, NOAA lang&rarr;breit mit pivot() umgeformt</td></tr>
+      <tr><td><span class="step-tag">4. Aggregieren</span></td><td>citi_bike_weather_2022</td><td>1,7 Mio. Fahrtzeilen zu t&#228;glichen Fahrtanzahlen gruppiert; Stationsdaten f&#252;r Top-10-Ranking aggregiert</td></tr>
+      <tr><td><span class="step-tag">5. Zusammenf&#252;hren</span></td><td>citi_bike_weather_2022</td><td>Inner Join: t&#228;gliche Fahrtanzahlen mit NOAA-Wetter &#252;ber Datumsschl&#252;ssel &rarr; citibike_2022_daily_with_weather.csv</td></tr>
+      <tr><td><span class="step-tag">6. Visualisieren</span></td><td>exercise_2_3 / exercise_2_4</td><td>Matplotlib und Seaborn EDA: Zeitreihen, Doppelachsendiagramm, Streudiagramm, Verteilungen</td></tr>
+      <tr><td><span class="step-tag">7. Geospatial</span></td><td>exercise_2_5</td><td>Kepler.gl Fahrt-Ursprungskarte &mdash; r&#228;umliche Clusteranalyse der Nachfrage 2022</td></tr>
+      <tr><td><span class="step-tag">8. Dashboard</span></td><td>exercise_2_6</td><td>6-seitige Streamlit-App mit Plotly-Charts, Sidebar-Navigation, gecachtem Datenladen</td></tr>
+      <tr><td><span class="step-tag">9. Deployen</span></td><td>app_part_2.py</td><td>Auf Streamlit Cloud deployt &mdash; live unter dem Link unten</td></tr>
+    </tbody>
+  </table>
+
+  <h2>1) Saisonalität treibt die Nachfrage</h2>
+  <p>Die durchschnittlichen t&#228;glichen Fahrten folgen 2022 einem klaren saisonalen Muster. Die Nutzung steigt von einem Januartief von rund <strong>33.000 Fahrten/Tag</strong>, erreicht im Sp&#228;tsommer einen H&#246;chstwert von etwa <strong>115.000 Fahrten/Tag</strong> und f&#228;llt dann steil ab. Der Unterschied zwischen Spitze und Tief entspricht einem Faktor von &#252;ber 3.</p>
+  <figure class="case-figure">
+    <img src="citi-monthly-trends.png" alt="Durchschnittliche t&#228;gliche Citi-Bike-Fahrten pro Monat, 2022"/>
+    <figcaption>Abbildung 1. Durchschnittliche t&#228;gliche Fahrten pro Monat, 2022. Die Spitzennachfrage l&#228;uft von Juni bis September; das Wintertief (Nov&ndash;M&#228;rz) liegt bei etwa der H&#228;lfte der Sommernachfrage. Erstellt aus citibike_2022_daily_with_weather.csv.</figcaption>
+  </figure>
+  <div class="insight-box">
+    <p><strong>Wichtige Erkenntnis &mdash; Saisonale Skalierungsbasis:</strong> Die Winternachfrage (Nov&ndash;Apr) entspricht etwa 50&#37; der Sommernachfrage (Jun&ndash;Aug). Dies quantifiziert direkt, um wie viel die Umverteilungsintensit&#228;t und Personalbesetzung im Winter reduziert werden k&#246;nnen.</p>
+  </div>
+
+  <h2>2) Temperatur sagt t&#228;gliche Fahrtzahlen vorher</h2>
+  <p>Die &#220;berlagerung von t&#228;glichen Fahrtanzahlen mit der NOAA-Durchschnittstemperatur zeigt, dass beide Signale sich &#252;ber das gesamte Jahr eng verfolgen. K&#228;lteeinbr&#252;che f&#252;hren zu starken Einbr&#252;chen; warme Phasen treiben die Zahlen in Richtung saisonaler H&#246;chstwerte.</p>
+  <figure class="case-figure">
+    <img src="citi-trip-vs-temp.png" alt="T&#228;gliche Citi-Bike-Fahrten vs. Durchschnittstemperatur, Doppelachse, 2022"/>
+    <figcaption>Abbildung 2. T&#228;gliche Fahrtanzahl (gr&#252;n, linke Achse) vs. Durchschnittstemperatur in &deg;C (gelb, rechte Achse), vollst&#228;ndiges Jahr 2022. Daten: Citi-Bike-Fahrten mit NOAA-GHCND-Station USW00014732 (LaGuardia) zusammengef&#252;hrt.</figcaption>
+  </figure>
+  <figure class="case-figure">
+    <img src="citi-temp-scatter.png" alt="Streudiagramm: t&#228;gliche Fahrten vs. Durchschnittstemperatur, nach Monat eingef&#228;rbt"/>
+    <figcaption>Abbildung 3. Streudiagramm t&#228;glicher Fahrten vs. Durchschnittstemperatur, nach Monat eingef&#228;rbt (Plasma-Skala). Die positive Trendlinie best&#228;tigt Temperatur als zuverl&#228;ssigen Nachfragepr&#228;diktor. Jeder Punkt repr&#228;sentiert einen Tag in 2022.</figcaption>
+  </figure>
+  <div class="insight-box">
+    <p><strong>Wichtige Erkenntnis &mdash; Wetterbasierte Betriebsplanung:</strong> Temperatur ist ein zuverl&#228;ssiges Vorwarnsignal. Die Integration von NOAA-Tagesvorhersagen in die Versorgungsplanung erm&#246;glicht es, Nachfragespitzen proaktiv zu antizipieren statt reaktiv zu reagieren.</p>
+  </div>
+
+  <h3>Code-Highlight &mdash; 12 monatliche CSVs effizient kombinieren</h3>
+  <p>Ein Generator-Ausdruck innerhalb von pd.concat() vermeidet den Aufbau einer Liste von 12 vollst&#228;ndigen DataFrames im Speicher. Jede Datei wird gelesen, hinzugef&#252;gt und freigegeben, bevor die n&#228;chste geladen wird:</p>
+  <pre class="code-block">csv_files = [
+    os.path.join(monthly_folder, f)
+    for f in os.listdir(monthly_folder)
+    if f.lower().endswith(".csv")
+]
+
+citibike_df = pd.concat(
+    (pd.read_csv(file, low_memory=False) for file in csv_files),
+    ignore_index=True
+)</pre>
+
+  <h2>3) Nachfrage konzentriert sich in Manhattan</h2>
+  <p>Alle 10 umsatzst&#228;rksten Startstationen 2022 befinden sich in Midtown Manhattan. Die Nr.-1-Station &mdash; <strong>W 21 St &amp; 6 Ave</strong> &mdash; verzeichnete 128.436 Fahrtbeginne. Die Top-3 &#252;berschritten je 100.000 Fahrten.</p>
+  <figure class="case-figure">
+    <img src="popular-stations-citibike.png" alt="Top-10-Citi-Bike-Startstationen nach Fahrtanzahl, 2022"/>
+    <figcaption>Abbildung 4. Die 10 beliebtesten Startstationen 2022. Erstellt aus top10_stations_2022.csv. Alle Stationen befinden sich in Midtown Manhattan &mdash; konzentrierte Pendler- und Gesch&#228;ftsbereichsnutzung best&#228;tigt.</figcaption>
+  </figure>
+  <div class="insight-box">
+    <p><strong>Wichtige Erkenntnis &mdash; Priorit&#228;re Umverteilungsziele:</strong> Diese 10 Stationen sind die risikoreichsten Punkte im System f&#252;r leere Docks oder nicht verf&#252;gbare Fahrr&#228;der. Sie ben&#246;tigen h&#228;ufigere Umverteilungszyklen, h&#246;here Dock-Kapazit&#228;t und proaktive Fr&#252;hmorgen-Bef&#252;llung vor den Stomu&#223;zeiten.</p>
+  </div>
+
+  <h2>Wichtigste Erkenntnisse</h2>
+  <div class="finding"><div class="finding-title">Erkenntnis 1 &mdash; Winternachfrage ist ~50&#37; der Sommernachfrage</div><p class="finding-body">Monatliche Durchschnittswerte zeigen einen 3-fachen Spread zwischen Spitze (August, ~115.000/Tag) und Tief (Januar, ~33.000/Tag). Dies quantifiziert direkt die saisonale Skalierungsm&#246;glichkeit f&#252;r Angebots- und Personalentscheidungen.</p></div>
+  <div class="finding"><div class="finding-title">Erkenntnis 2 &mdash; Temperatur ist ein zuverl&#228;ssiger Nachfragepr&#228;diktor</div><p class="finding-body">T&#228;gliche Fahrten folgen der Durchschnittstemperatur &#252;ber das gesamte Jahr eng. Das Streudiagramm best&#228;tigt einen starken positiven Trend. NOAA-Vorhersagen k&#246;nnten als Vorwarnsignal operationalisiert werden.</p></div>
+  <div class="finding"><div class="finding-title">Erkenntnis 3 &mdash; Alle Top-10-Stationen befinden sich in Manhattan</div><p class="finding-body">Die f&#252;hrende Station (W 21 St &amp; 6 Ave) generierte 128.436 Fahrtbeginne 2022. Alle Top-10 befinden sich in einem engen Manhattaner Korridor &mdash; hohe Priorit&#228;t f&#252;r erh&#246;hte Dock-Kapazit&#228;t und Umverteilungsfrequenz.</p></div>
+  <div class="finding"><div class="finding-title">Erkenntnis 4 &mdash; R&#228;umliche Cluster best&#228;tigen Hotspots jenseits von Stationsrankings</div><p class="finding-body">Die Kepler.gl-Karte zeigt dichte Cluster im Gesch&#228;ftsviertel Manhattans und am Hudson-Ufer, mit sekund&#228;ren Clustern in Brooklyn &mdash; Bewegungskorridore sichtbar, die in station&#228;ren Aggregaten unsichtbar sind.</p></div>
+  <div class="finding"><div class="finding-title">Erkenntnis 5 &mdash; Generator-basiertes Laden ist bei 1,7 Mio. Zeilen erforderlich</div><p class="finding-body">12 CSVs naiv zu laden w&#252;rde den Speicherbedarf verdoppeln. Ein Generator-Ausdruck innerhalb von pd.concat() streamt jede Datei sequenziell &mdash; wesentlich f&#252;r gro&#223;skalige lokale Datenarbeit ohne Datenbank.</p></div>
+
+  <h3>Projekt ansehen</h3>
+  <p>Das vollst&#228;ndige Dashboard ist live auf Streamlit Cloud deployt. Alle Notebooks, App-Code und der zusammengef&#252;hrte Datensatz sind auf GitHub verf&#252;gbar.</p>
+  <a href="https://citi-bike-weather-2022-f2zr3j3vwcsduf7c5vd84m.streamlit.app/" target="_blank" rel="noopener" class="btn-link">&#9654; Live Streamlit-Dashboard</a>
+  <a href="citi-bike-case-study-de.pdf" class="btn-link" download>&#8595; Vollst&#228;ndige Fallstudie herunterladen (PDF)</a>
+  <a href="https://github.com/ageelalramadhan/citi-bike-weather-2022" target="_blank" rel="noopener" class="btn-outline-link">&lt;/&gt; GitHub-Repository</a>
+
+</div>
+<footer>
+  <div class="footer-inner">
+    <p class="footer-copy">&copy; 2026 Ageel Alramadhan &middot; Datenanalyst &middot; Hamburg</p>
+    <div class="footer-links">
+      <a href="contact.html">Kontakt</a>
+      <a href="https://www.linkedin.com/in/ageel-alramadhan/" target="_blank" rel="noopener"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:middle;margin-right:4px"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>LinkedIn</a>
+      <a href="https://github.com/ageelalramadhan" target="_blank" rel="noopener"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:middle;margin-right:4px"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>GitHub</a>
+      <a href="impressum.html">Impressum</a>
+      <a href="datenschutz.html">Datenschutzerkl&#228;rung</a>
+    </div>
+  </div>
+</footer>
+<button class="back-top" id="back-top" aria-label="Back to top">&#8593;</button>
+<div id="cookie-banner" class="cookie-banner" style="display:none;">
+  <div class="cookie-inner"><p>Diese Website verwendet Google Analytics. Sie k&#246;nnen zustimmen oder ablehnen.</p>
+  <div class="cookie-actions"><button class="cookie-btn" data-cookie-reject>Ablehnen</button><button class="cookie-btn primary" data-cookie-accept>Akzeptieren</button></div></div>
+</div>
+<script src="consent.js"></script>
+<script>
+const btn = document.getElementById("back-top");
+window.addEventListener("scroll", () => btn.classList.toggle("visible", window.scrollY > 300));
+btn.addEventListener("click", () => window.scrollTo({top:0,behavior:"smooth"}));
+</script>
+</body>
+</html>

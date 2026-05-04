@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Textmining &amp; NLP im 20. Jahrhundert | Ageel Alramadhan</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="consent.css"/>
+<style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    :root{--bg:#0f0f0f;--bg2:#161616;--surface:#1e1e1e;--border:#2e2e2e;--text:#f0f0f0;--muted:#888;--accent:#3dd68c;--accent2:#00d4ff;}
+    html{scroll-behavior:smooth;}
+    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;}
+
+    /* NAV */
+    nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(15,15,15,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 40px;height:60px;display:flex;align-items:center;justify-content:space-between;}
+    .nav-logo{font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--accent);text-decoration:none;letter-spacing:1px;flex-shrink:0;width:160px;}
+    .nav-center{display:flex;gap:28px;list-style:none;align-items:center;position:absolute;left:50%;transform:translateX(-50%);}
+    .nav-center a{color:var(--muted);text-decoration:none;font-size:13px;font-weight:500;transition:color 0.2s;}
+    .nav-center a:hover{color:var(--text);}
+    .nav-right{display:flex;gap:12px;align-items:center;flex-shrink:0;width:160px;justify-content:flex-end;}
+    .nav-lang{font-size:12px;color:var(--muted);text-decoration:none;border:1px solid var(--border);padding:5px 12px;transition:all 0.2s;font-family:'JetBrains Mono',monospace;white-space:nowrap;}
+    .nav-lang:hover{border-color:var(--accent);color:var(--accent);}
+    .nav-back{font-size:12px;color:var(--muted);text-decoration:none;font-family:'JetBrains Mono',monospace;transition:color 0.2s;white-space:nowrap;}
+    .nav-back:hover{color:var(--text);}
+    @media(max-width:900px){nav{padding:0 20px;}.nav-center{display:none;}}
+
+    /* FOOTER */
+    footer{background:var(--bg2);border-top:1px solid var(--border);padding:28px 40px;}
+    .footer-inner{max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap;}
+    .footer-copy{font-size:13px;color:var(--muted);font-family:'JetBrains Mono',monospace;}
+    .footer-links{display:flex;gap:20px;align-items:center;flex-wrap:wrap;}
+    .footer-links a{color:var(--muted);text-decoration:none;font-size:13px;font-family:'JetBrains Mono',monospace;display:flex;align-items:center;transition:color 0.2s;}
+    .footer-links a:hover{color:var(--accent);}
+    @media(max-width:768px){.footer-inner{flex-direction:column;align-items:flex-start;}.footer-links{gap:14px;}}
+
+    /* BACK TO TOP */
+    .back-top{position:fixed;bottom:28px;right:28px;z-index:200;width:44px;height:44px;background:var(--accent);color:#0f0f0f;border:none;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.3s,transform 0.2s;border-radius:50%;}
+    .back-top.visible{opacity:1;pointer-events:auto;}
+    .back-top:hover{transform:translateY(-3px);}
+
+    /* BTNS */
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:13px 28px;font-family:'JetBrains Mono',monospace;font-size:14px;text-decoration:none;transition:all 0.2s;cursor:pointer;border:none;white-space:nowrap;}
+    .btn-accent{background:var(--accent);color:#0f0f0f;font-weight:600;}
+    .btn-accent:hover{background:#4df0a0;transform:translateY(-1px);}
+    .btn-outline{background:transparent;color:var(--text);border:1px solid var(--border);}
+    .btn-outline:hover{border-color:var(--accent);color:var(--accent);}
+
+    @media(max-width:900px){
+      nav{padding:0 20px;}
+      .nav-center{display:none;}
+      .footer-inner{grid-template-columns:1fr;}
+      .footer-links{justify-content:flex-start;}
+    }
+    .page-hero{padding:100px 40px 52px;background:var(--bg2);border-bottom:1px solid var(--border);}
+    .page-hero-inner{max-width:900px;margin:0 auto;}
+    .page-eyebrow{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:16px;}
+    .page-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(32px,5vw,60px);letter-spacing:2px;line-height:1;margin-bottom:14px;}
+    .page-subtitle{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--muted);margin-bottom:28px;}
+    .switcher{display:flex;gap:3px;flex-wrap:wrap;margin-top:16px;position:relative;z-index:1;}
+    .switcher a,.switcher span{padding:7px 14px;font-family:'JetBrains Mono',monospace;font-size:13px;text-decoration:none;border:1px solid var(--border);color:var(--muted);transition:all 0.2s;}
+    .switcher a:hover{border-color:var(--accent);color:var(--accent);}
+    .switcher span.active{background:var(--accent);color:#0f0f0f;border-color:var(--accent);font-weight:600;}
+    .case-body{max-width:900px;margin:0 auto;padding:60px 40px 100px;}
+    .tools-box{background:var(--bg2);border:1px solid var(--border);padding:20px 24px;margin-bottom:40px;}
+    .tools-label{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+    .tools-value{font-family:'JetBrains Mono',monospace;font-size:15px;color:var(--accent);margin-bottom:8px;}
+    .tools-box p{font-size:15px;color:#b0b0b0;}
+    .case-body h2{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:1px;margin:48px 0 14px;color:var(--text);}
+    .case-body h3{font-size:18px;font-weight:600;margin:32px 0 10px;color:var(--text);}
+    .case-body p{font-size:16px;color:#c0c0c0;line-height:1.8;margin-bottom:16px;}
+    .case-body ul{margin:0 0 20px 20px;}
+    .case-body li{font-size:16px;color:#c0c0c0;line-height:1.8;margin-bottom:8px;}
+    .case-body strong{color:var(--text);}
+    .case-figure{margin:20px 0 28px;}
+    .case-figure img{width:100%;display:block;border:1px solid var(--border);}
+    .case-figure figcaption{font-size:14px;color:var(--muted);margin-top:10px;font-style:italic;line-height:1.6;}
+    pre.sql-block{background:var(--surface);border:1px solid var(--border);padding:20px 24px;font-family:'JetBrains Mono',monospace;font-size:13px;color:#c0c0c0;overflow-x:auto;line-height:1.7;margin:16px 0 24px;white-space:pre;}
+    .btn-link{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;font-family:'JetBrains Mono',monospace;font-size:14px;text-decoration:none;background:var(--accent);color:#0f0f0f;font-weight:600;margin:16px 0;transition:all 0.2s;}
+    .btn-link:hover{background:#4df0a0;}
+    @media(max-width:768px){.page-hero{padding:80px 20px 40px;}.case-body{padding:40px 20px 60px;}}</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo">ageel.alramadhan</a>
+  <ul class="nav-center">
+    <li><a href="index.html">Start</a></li>
+    <li><a href="about.html">&#220;ber mich</a></li>
+    <li><a href="projects.html">Projekte</a></li>
+    <li><a href="contact.html">Kontakt</a></li>
+  </ul>
+  <div class="nav-right">
+    <a href="textmining-case-study.html" class="nav-lang">&#127468;&#127463; English</a>
+  </div>
+</nav>
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="page-eyebrow">Fallstudie</div>
+    <h1 class="page-title">Textmining &amp; NLP im 20. Jahrhundert</h1>
+    <div class="page-subtitle">Python &middot; Selenium &middot; NLTK &middot; TextBlob &middot; spaCy &middot; NetworkX &middot; Leiden</div>
+    <nav class="switcher">
+      <a href="instacart-case-study-de.html">Instacart</a>
+      <a href="citi-bike-case-study-de.html">Citi Bike</a>
+      <a href="rockbuster-case-study-de.html">Rockbuster</a>
+      <a href="influenza-case-study-de.html">Influenza</a>
+      <a href="happiness-case-study-de.html">Happiness</a>
+      <span class="active">Text Mining</span>
+    </nav>
+  </div>
+</div>
+<div class="case-body">
+
+  <div class="tools-box">
+    <div class="tools-label">Tools &amp; Bibliotheken</div>
+    <div class="tools-value">Python &middot; Selenium &middot; NLTK &middot; TextBlob &middot; spaCy &middot; NetworkX &middot; cdlib (Leiden)</div>
+    <p><strong>Datenquelle:</strong> Wikipedia &mdash; &bdquo;Schl&#252;sselereignisse des 20. Jahrhunderts&ldquo; (per Selenium gescrapt, ~80.000 Token nach Bereinigung)</p>
+    <p><strong>Ergebnis:</strong> Co-Occurrence-Netzwerk mit 21 L&#228;ndern, 53 einzigartigen Kanten, Community-Detection und Zentralit&#228;tsanalyse</p>
+  </div>
+
+    <div class="source-box">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+    <div>
+      <div class="source-label">Quellcode</div>
+      <a href="https://github.com/ageelalramadhan/20th-century-text-mining" target="_blank" rel="noopener">github.com/ageelalramadhan/20th-century-text-mining &rarr;</a>
+    </div>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat-cell" style="border-top:3px solid var(--accent)"><div class="stat-num stat-green">4</div><div class="stat-label">Notebooks</div></div>
+    <div class="stat-cell" style="border-top:3px solid var(--accent2)"><div class="stat-num stat-blue">21</div><div class="stat-label">L&#228;nder erfasst</div></div>
+    <div class="stat-cell" style="border-top:3px solid #f0c040"><div class="stat-num stat-yellow">53</div><div class="stat-label">Netzwerkkanten</div></div>
+    <div class="stat-cell" style="border-top:3px solid #ff6b9d"><div class="stat-num stat-pink">4</div><div class="stat-label">Leiden-Communities</div></div>
+  </div>
+
+  <h3>Projekt&#252;bersicht</h3>
+  <p>Dieses Projekt wendet eine vollst&#228;ndige NLP-Pipeline auf einen Wikipedia-Artikel &#252;ber <strong>Schl&#252;sselereignisse des 20. Jahrhunderts</strong> an. Ziel: Von rohen Webdaten zu einer strukturierten, visuellen Darstellung, welche L&#228;nder historisch am st&#228;rksten miteinander verbunden waren.</p>
+  <p><strong>Fragestellung:</strong> Welche L&#228;nder wurden in 20.-Jahrhundert-Ereignissen am h&#228;ufigsten gemeinsam erw&#228;hnt &mdash; und spiegeln ihre Co-Occurrence-Muster reale geopolitische B&#252;ndnisse und Konflikte wider?</p>
+
+  <h3>Pipeline-Architektur</h3>
+  <table class="pipeline-table">
+    <thead><tr><th>Schritt</th><th>Tool</th><th>Ergebnis</th></tr></thead>
+    <tbody>
+      <tr><td><span class="step-tag">1. Web-Scraping</span></td><td>Selenium + ChromeDriver</td><td>20th_century_key_events.txt</td></tr>
+      <tr><td><span class="step-tag">2. Textbereinigung</span></td><td>Python (zeilenweise Filter)</td><td>Navigations-Artefakte entfernt, bereinigtes Korpus gespeichert</td></tr>
+      <tr><td><span class="step-tag">3. Textmining</span></td><td>NLTK + TextBlob</td><td>Worthäufigkeit, POS-Tags, L&#228;ndererwähnungen</td></tr>
+      <tr><td><span class="step-tag">4. NER-Extraktion</span></td><td>spaCy (en_core_web_sm)</td><td>GPE-Entit&#228;tspaare pro Satz</td></tr>
+      <tr><td><span class="step-tag">5. Alias-Normalisierung</span></td><td>Benutzerdefiniertes Dictionary</td><td>UK/Britain/U.K. &rarr; United Kingdom</td></tr>
+      <tr><td><span class="step-tag">6. Netzwerkaufbau</span></td><td>NetworkX</td><td>Ungerichteter Graph: 21 Knoten, 53 Kanten</td></tr>
+      <tr><td><span class="step-tag">7. Community-Detection</span></td><td>Leiden (cdlib)</td><td>4 geopolitische Cluster identifiziert</td></tr>
+      <tr><td><span class="step-tag">8. Zentralit&#228;tsanalyse</span></td><td>NetworkX</td><td>Degree-, Closeness-, Betweenness-Scores</td></tr>
+      <tr><td><span class="step-tag">9. Visualisierung</span></td><td>Pyvis + Matplotlib</td><td>Interaktives HTML + Publikationsdiagramme</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Phase 1 &mdash; Web-Scraping</h2>
+  <p>Selenium mit ChromeDriver (Headless-Modus) scrapt den vollst&#228;ndigen Artikeltext. Die Rohausgabe enthielt Navigationselemente &mdash; Men&#252;s, Bearbeitungslinks, Tool-Labels &mdash; die NER-Ergebnisse verf&#228;lschen w&#252;rden.</p>
+  <div class="insight-box"><p><strong>Wichtige Erkenntnis &mdash; Textbereinigung ist analytische Integrit&#228;t.</strong> Navigations-Artefakte w&#252;rden L&#228;nderz&#228;hlungen k&#252;nstlich aufbl&#228;hen und falsche Netzwerkkanten erzeugen. Dieser Schritt bestimmt die G&#252;ltigkeit aller nachgelagerten Befunde.</p></div>
+
+  <h2>Phase 2 &mdash; Textmining &amp; H&#228;ufigkeitsanalyse</h2>
+  <p>NLTK &#252;bernahm Tokenisierung und Stoppwort-Entfernung. TextBlob lieferte POS-Tagging. Der Kontrast zwischen Wortfrequenz vor und nach Stoppwort-Entfernung zeigt den eigentlichen thematischen Fokus des Artikels.</p>
+  <figure class="case-figure"><img src="word-freq-comparison.png" alt="Worthäufigkeit vor und nach Stoppwort-Entfernung"/><figcaption>Abbildung 1. Worthäufigkeit vor und nach Stoppwort-Entfernung. Nach der Bereinigung dominieren Krieg (151), Welt (98), Sowjet (87) und nuklear (58).</figcaption></figure>
+  <figure class="case-figure"><img src="country-mentions.png" alt="Ländererwähnungen"/><figcaption>Abbildung 2. L&#228;ndererwähnungen. Deutschland (89), USA (82), Frankreich (71) und Sowjetunion (68) dominieren.</figcaption></figure>
+
+  <h2>Phase 3 &mdash; Named Entity Recognition</h2>
+  <p>spaCys en_core_web_sm-Modell extrahierte GPE-Tags (Geopolitische Entit&#228;ten) satzweise. Ein benutzerdefiniertes Alias-Dictionary normalisierte Entit&#228;tsvarianten.</p>
+  <figure class="case-figure"><img src="cooccurrence-heatmap.png" alt="Länder-Co-Occurrence-Heatmap"/><figcaption>Abbildung 3. L&#228;nder-Co-Occurrence-Heatmap. Deutschland&ndash;Frankreich, Deutschland&ndash;UK und Deutschland&ndash;Sowjetunion sind die st&#228;rksten Paare &mdash; WWI/WWII-Strukturen direkt aus dem Text.</figcaption></figure>
+  <div class="insight-box"><p><strong>Wichtige Erkenntnis &mdash; Alias-Normalisierung:</strong> Ohne Zuordnung von &bdquo;UK&ldquo;, &bdquo;U.K.&ldquo; und &bdquo;Britain&ldquo; zu einem Knoten wird die Netzwerkposition des Vereinigten K&#246;nigreichs auf drei Knoten aufgeteilt. Entity Resolution bestimmt die Graph-G&#252;ltigkeit.</p></div>
+
+  <h2>Phase 4 &mdash; Netzwerkvisualisierung &amp; Community-Detection</h2>
+  <p>Ein ungerichteter NetworkX-Graph wurde aus 53 einzigartigen L&#228;nderpaaren &#252;ber 21 Knoten aufgebaut (Dichte: 0,252, Clustering-Koeffizient: 0,552). Der Leiden-Algorithmus erkannte 4 Communities.</p>
+  <figure class="case-figure"><img src="network-graph.png" alt="Geopolitisches Co-Occurrence-Netzwerk"/><figcaption>Abbildung 4. Geopolitisches Co-Occurrence-Netzwerk. Knotengr&#246;&#223;e = Degree-Zentralit&#228;t. Farbe = Leiden-Community.</figcaption></figure>
+
+  <h2>Phase 5 &mdash; Zentralit&#228;tsanalyse</h2>
+  <p>Drei Zentralit&#228;tsma&#223;e wurden berechnet. Deutschland belegt in allen drei Ma&#223;en Platz 1 &mdash; mit deutlichem Abstand.</p>
+  <figure class="case-figure"><img src="centrality-analysis.png" alt="Degree-, Closeness- und Betweenness-Zentralität"/><figcaption>Abbildung 5. Degree-, Closeness- und Betweenness-Zentralit&#228;t &mdash; Top 10 L&#228;nder.</figcaption></figure>
+
+  <h2>Wichtigste Erkenntnisse</h2>
+  <div class="finding"><div class="finding-title">Erkenntnis 1 &mdash; Textbereinigung bestimmt analytische G&#252;ltigkeit</div><p class="finding-body">Navigations-Artefakte w&#252;rden NER-Ergebnisse korrumpieren. Der Bereinigungsschritt ist eine Entscheidung dar&#252;ber, was die Analyse misst &mdash; kein Vorverarbeitungsdetail.</p></div>
+  <div class="finding"><div class="finding-title">Erkenntnis 2 &mdash; Historische Themen aus Worthäufigkeiten rekonstruierbar</div><p class="finding-body">&bdquo;Krieg&ldquo;, &bdquo;Sowjet&ldquo;, &bdquo;nuklear&ldquo; und &bdquo;kalt&ldquo; dominieren nach Stoppwort-Entfernung &mdash; H&#228;ufigkeitsanalyse offenbart das eigentliche Thema des Korpus.</p></div>
+  <div class="finding"><div class="finding-title">Erkenntnis 3 &mdash; Alias-Normalisierung essenziell f&#252;r valide Netzwerkkonstruktion</div><p class="finding-body">Ohne Zusammenf&#252;hrung von &bdquo;UK&ldquo;, &bdquo;U.K.&ldquo;, &bdquo;Britain&ldquo; zu einem Knoten wird die Zentralit&#228;t des Vereinigten K&#246;nigreichs k&#252;nstlich fragmentiert.</p></div>
+  <div class="finding"><div class="finding-title">Erkenntnis 4 &mdash; Deutschland ist das strukturelle Zentrum der Geopolitik des 20. Jahrhunderts</div><p class="finding-body">Platz 1 bei Degree-, Closeness- und Betweenness-Zentralit&#228;t. Das Netzwerk repliziert historischen Konsens eigenst&#228;ndig.</p></div>
+  <div class="finding"><div class="finding-title">Erkenntnis 5 &mdash; Community-Detection rekonstruiert B&#252;ndnisstrukturen allein aus Text</div><p class="finding-body">Die vier Leiden-Communities spiegeln geopolitische B&#252;ndnisstrukturen des 20. Jahrhunderts wider &mdash; Co-Occurrence-Muster kodieren geopolitische Realit&#228;t.</p></div>
+
+  <h3>Vollst&#228;ndige Fallstudie PDF</h3>
+  <p>Laden Sie die vollst&#228;ndige Fallstudie mit allen Diagrammen, Pipeline-Dokumentation, Zentralit&#228;tsanalyse und technischem Anhang herunter.</p>
+  <a href="textmining-case-study-de.pdf" class="btn-link" download>&#8595; Vollst&#228;ndige Fallstudie herunterladen (PDF)</a>
+  <a href="https://github.com/ageelalramadhan/20th-century" target="_blank" rel="noopener" class="btn-outline-link">&lt;/&gt; GitHub-Repository</a>
+
+</div>
+<footer>
+  <div class="footer-inner">
+    <p class="footer-copy">&copy; 2026 Ageel Alramadhan &middot; Datenanalyst &middot; Hamburg</p>
+    <div class="footer-links">
+      <a href="contact.html">Kontakt</a>
+      <a href="https://www.linkedin.com/in/ageel-alramadhan/" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://github.com/ageelalramadhan" target="_blank" rel="noopener">GitHub</a>
+      <a href="impressum.html">Impressum</a>
+      <a href="datenschutz.html">Datenschutzerkl&#228;rung</a>
+    </div>
+  </div>
+</footer>
+<button class="back-top" id="back-top" aria-label="Back to top">&#8593;</button>
+<div id="cookie-banner" class="cookie-banner" style="display:none;">
+  <div class="cookie-inner"><p>Diese Website verwendet Google Analytics. Sie k&#246;nnen zustimmen oder ablehnen.</p>
+  <div class="cookie-actions"><button class="cookie-btn" data-cookie-reject>Ablehnen</button><button class="cookie-btn primary" data-cookie-accept>Akzeptieren</button></div></div>
+</div>
+<script src="consent.js"></script>
+<script>
+const btn = document.getElementById("back-top");
+window.addEventListener("scroll", () => btn.classList.toggle("visible", window.scrollY > 300));
+btn.addEventListener("click", () => window.scrollTo({top:0,behavior:"smooth"}));
+</script>
+</body>
+</html>
