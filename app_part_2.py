@@ -77,17 +77,16 @@ st.sidebar.markdown("""
 """, unsafe_allow_html=True)
 
 page = st.sidebar.selectbox(
-    "Navigate",
+    "Navigate to",
     [
-        "📋  Introduction",
-        "📍  Popular Stations",
-        "🌡️  Trips vs Temperature",
-        "📈  Monthly Trends",
-        "🔵  Temperature Scatter",
-        "🗺️  Trip Map",
-        "💡  Recommendations",
+        "Introduction",
+        "Popular Stations",
+        "Trips vs Temperature",
+        "Monthly Trends",
+        "Temperature Scatter",
+        "Trip Map",
+        "Recommendations",
     ],
-    label_visibility="collapsed",
 )
 
 st.sidebar.markdown("---")
@@ -497,31 +496,65 @@ forward-looking demand signal — allowing supply adjustments before demand spik
 # =========================================================
 # PAGE: TRIP MAP
 # =========================================================
-elif "Map" in page:
+elif "Trip Map" in page:
 
-    st.markdown("## Trip Map")
-    st.caption("Spatial view of high-activity zones and trip origin clusters, 2022.")
+    st.markdown("## Trip Map — NYC Citi Bike 2022")
+    st.caption("Geospatial view of trip origins, destinations, and movement arcs. Built with Kepler.gl.")
+
+    col1, col2, col3 = st.columns(3)
+    col1.markdown("""
+<div style="background:#1e1e1e;border:1px solid #2e2e2e;padding:12px 16px;">
+<div style="font-family:monospace;font-size:11px;color:#888;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Layer 1</div>
+<div style="color:#3dd68c;font-size:13px;font-weight:600;margin-bottom:4px;">&#9679; Start stations</div>
+<div style="color:#888;font-size:12px;line-height:1.5;">Trip origin points — size and colour scale with trip volume</div>
+</div>
+""", unsafe_allow_html=True)
+
+    col2.markdown("""
+<div style="background:#1e1e1e;border:1px solid #2e2e2e;padding:12px 16px;">
+<div style="font-family:monospace;font-size:11px;color:#888;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Layer 2</div>
+<div style="color:#f0c040;font-size:13px;font-weight:600;margin-bottom:4px;">&#9679; End stations</div>
+<div style="color:#888;font-size:12px;line-height:1.5;">Trip destination points — reveals where bikes accumulate</div>
+</div>
+""", unsafe_allow_html=True)
+
+    col3.markdown("""
+<div style="background:#1e1e1e;border:1px solid #2e2e2e;padding:12px 16px;">
+<div style="font-family:monospace;font-size:11px;color:#888;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Layer 3</div>
+<div style="color:#00d4ff;font-size:13px;font-weight:600;margin-bottom:4px;">&#11835; Trip arcs</div>
+<div style="color:#888;font-size:12px;line-height:1.5;">Arc thickness and colour = trip frequency between station pairs</div>
+</div>
+""", unsafe_allow_html=True)
+
+    st.markdown("---")
 
     if os.path.exists(MAP_PATH):
         with open(MAP_PATH, "r", encoding="utf-8") as f:
             map_html = f.read()
-        components.html(map_html, height=680, scrolling=True)
+        components.html(map_html, height=700, scrolling=True)
+    else:
+        st.warning("kepler_map.html not found. Make sure it is in the same folder as app.py.")
 
-        st.markdown("""
+    st.markdown("""
 ### What this tells us
 
-Trip activity is highly concentrated in **central Manhattan**, with dense movement clusters 
-around business districts, major transit corridors, and the Hudson waterfront.
+The map renders three layers: **start stations** (green), **end stations** (yellow), 
+and **trip arcs** connecting the most common origin-destination pairs. 
+Arc thickness and colour scale with trip frequency between each station pair.
 
-Secondary clusters are visible forming in Brooklyn — identifying movement corridors that 
-station-level aggregates alone don't capture.
+All high-volume activity concentrates in **central Manhattan** — the business district, 
+Hudson waterfront corridor, and major transit hub areas. The arc layer makes commuter 
+patterns readable: thick arcs between nearby midtown stations confirm short-distance, 
+high-frequency commuter usage rather than cross-borough journeys.
 
-**Operational implication:** These spatial hotspots are the primary candidates for 
-more frequent restocking, higher dock capacity, and targeted operational monitoring. 
-Waterfront and Brooklyn corridors may justify new station placement or capacity expansion.
+Secondary clusters appear along the **Hudson waterfront** and into **Brooklyn** — 
+movement corridors invisible in station-level bar charts.
+
+**Operational implication:** These spatial hotspots are the highest-priority candidates 
+for more frequent restocking, higher dock capacity, and targeted monitoring. The arc 
+layer identifies which specific station *pairs* drive the most volume — useful for 
+targeted rebalancing between origin and destination clusters.
 """)
-    else:
-        st.warning("kepler_map.html not found. Ensure it is in the same folder as app_part_2.py.")
 
 
 # =========================================================
